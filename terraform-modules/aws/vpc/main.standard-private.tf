@@ -1,3 +1,4 @@
+# NOTE: standard-private
 # data "aws_availability_zones" "available" {}
 
 # locals {

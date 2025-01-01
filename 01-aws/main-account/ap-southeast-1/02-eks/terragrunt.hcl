@@ -7,20 +7,18 @@ include "root" {
   expose = true
 }
 
-dependencies "vpc" {
-  config_path = "${get_terragrunt_dir()}/../vpc"
+dependency "vpc" {
+  config_path = "${get_terragrunt_dir()}/../01-vpc"
 }
 
 ###########################################################
 # Input variables for this module
 ###########################################################
 inputs = {
-  vpc_id = dependencies.vpc.outputs.vpc_id
+  vpc_id = dependency.vpc.outputs.vpc_id
   # NOTE: standard-private
-  # private_subnets = dependencies.vpc.outputs.private_subnets
-  # private_subnets_cidr_blocks = dependencies.vpc.outputs.private_subnets_cidr_blocks
-  private_subnets = dependencies.vpc.outputs.public_subnets
-  private_subnets_cidr_blocks = dependencies.vpc.outputs.public_subnets_cidr_blocks
+  # subnet_ids = compact([for subnet_id, cidr_block in zipmap(dependency.vpc.outputs.private_subnets, dependency.vpc.outputs.private_subnets_cidr_blocks) : substr(cidr_block, 0, 4) == "100." ? subnet_id : null])
+  subnet_ids = compact([for subnet_id, cidr_block in zipmap(dependency.vpc.outputs.public_subnets, dependency.vpc.outputs.public_subnets_cidr_blocks) : substr(cidr_block, 0, 4) == "100." ? subnet_id : null])
   name = "strimq"
   eks_cluster_version = "1.31"
 }

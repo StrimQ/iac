@@ -1,7 +1,7 @@
 data "aws_availability_zones" "available" {}
 
 locals {
-  name   = var.name
+  name = var.name
 
   azs = slice(data.aws_availability_zones.available.names, 0, 2)
 
@@ -13,6 +13,8 @@ locals {
   public_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 5, k + 8)]
   # RFC6598 range 100.64.0.0/16 for EKS Data Plane for two subnets(32768 IPs per Subnet) across two AZs for EKS Control Plane ENI + Nodes + Pods
   # e.g., var.secondary_cidr_blocks = "100.64.0.0/16" => output: ["100.64.0.0/17", "100.64.128.0/17"] => 32768-2 = 32766 usable IPs per subnet/AZ
+  # NOTE: standard-private
+  # secondary_ip_range_private_subnets = [for k, v in local.azs : cidrsubnet(element(var.secondary_cidr_blocks, 0), 1, k)]
   secondary_ip_range_public_subnets = [for k, v in local.azs : cidrsubnet(element(var.secondary_cidr_blocks, 0), 1, k)]
 
   tags = merge(var.tags, {
@@ -39,12 +41,11 @@ module "vpc" {
 
   private_subnets = local.private_subnets
 
-  # ------------------------------
-  # Optional Public Subnets for NAT and IGW for PoC/Dev/Test environments
-  # Public Subnets can be disabled while deploying to Production and use Private NAT + TGW
-# 1/ EKS Data Plane secondary CIDR blocks for two subnets across two AZs for EKS Control Plane ENI + Nodes + Pods
-  # 2/ Two private Subnets with RFC1918 private IPv4 address range for Private NAT + NLB + Airflow + EC2 Jumphost etc.
+  # NOTE: standard-private
+  # private_subnets     = concat(local.private_subnets, local.secondary_ip_range_private_subnets)
+  map_public_ip_on_launch = true
   public_subnets     = concat(local.public_subnets, local.secondary_ip_range_public_subnets)
+
   enable_nat_gateway = var.enable_nat_gateway
   single_nat_gateway = true
   #-------------------------------
