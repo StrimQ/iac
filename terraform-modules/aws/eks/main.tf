@@ -50,6 +50,16 @@ module "eks" {
     }
   }
 
+  node_security_group_additional_rules = {
+    sealed_secrets_ingress_from_control_plane = {
+      type                          = "ingress"
+      from_port                     = 8080
+      to_port                       = 8080
+      protocol                      = "tcp"
+      source_cluster_security_group = true
+      description            = "Allow Sealed Secrets to receive traffic from the control plane"
+    }
+  }
   node_security_group_tags = merge(local.tags, {
     # NOTE - if creating multiple security groups with this module, only tag the
     # security group that Karpenter should utilize with the following tag
