@@ -5,14 +5,14 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: argo-cd
   source:
-    repoURL: https://github.com/arthurk/argocd-example-install.git
-    path: charts/root-app/
+    repoURL: https://github.com/StrimQ/iac.git
+    path: helm-charts/root-app/
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: argo-cd
   syncPolicy:
     automated:
       selfHeal: true
