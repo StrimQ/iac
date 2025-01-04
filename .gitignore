@@ -55,4 +55,4 @@ mocks/
 /sops/**.dec.yaml
 
 # Helm charts
-charts/**/charts
+helm-charts/**/charts
