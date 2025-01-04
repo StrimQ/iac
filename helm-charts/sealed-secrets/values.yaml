@@ -1,0 +1,3 @@
+sealed-secrets:
+  enabled: true
+  fullnameOverride: sealed-secrets-controller
