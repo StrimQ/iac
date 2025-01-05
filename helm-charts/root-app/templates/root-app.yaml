@@ -9,10 +9,16 @@ spec:
   source:
     repoURL: https://github.com/StrimQ/iac.git
     path: helm-charts/root-app/
-    targetRevision: HEAD
+    targetRevision: main
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argo-cd
   syncPolicy:
     automated:
       selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
