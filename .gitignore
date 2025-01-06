@@ -58,4 +58,4 @@ mocks/
 *helm-charts/**/charts
 
 # Unsealed secrets
-*-secret.yaml
+*.secret.yaml
