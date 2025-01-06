@@ -55,4 +55,7 @@ mocks/
 /sops/**.dec.yaml
 
 # Helm charts
-helm-charts/**/charts
+*helm-charts/**/charts
+
+# Unsealed secrets
+*-secret.yaml

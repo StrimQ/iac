@@ -8,7 +8,7 @@ spec:
   project: argo-cd
   source:
     repoURL: https://github.com/StrimQ/iac.git
-    path: helm-charts/root-app/
+    path: 02-helm-charts/03-bootstrap/
     targetRevision: main
     directory:
       recurse: true
