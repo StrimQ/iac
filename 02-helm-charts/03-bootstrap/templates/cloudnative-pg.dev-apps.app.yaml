@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cloudnative-pg
+  name: cnpg
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: dev-apps
   source:
-    repoURL: https://github.com/StrimQ/iac.git
-    path: 02-helm-charts/04-dev-apps/cloudnative-pg
-    targetRevision: main
-    directory:
-      recurse: true
+    chart: cloudnative-pg
+    repoURL: https://cloudnative-pg.github.io/charts
+    targetRevision: 0.23.0
+    helm:
+      releaseName: cnpg
   destination:
     server: https://kubernetes.default.svc
-    namespace: cloudnative-pg
+    namespace: cnpg
   syncPolicy:
     automated:
       selfHeal: true
