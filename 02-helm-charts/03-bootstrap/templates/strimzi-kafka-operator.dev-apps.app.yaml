@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: authentik
+  name: strimzi-kafka-operator
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: dev-apps
   source:
     repoURL: https://github.com/StrimQ/iac.git
-    path: 02-helm-charts/04-dev-apps/authentik
+    path: 02-helm-charts/04-dev-apps/strimzi-kafka-operator
     targetRevision: main
     directory:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: authentik
+    namespace: strimzi-kafka-operator
   syncPolicy:
     automated:
       selfHeal: true

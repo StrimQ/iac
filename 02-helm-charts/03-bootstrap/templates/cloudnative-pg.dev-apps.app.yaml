@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: authentik
+  name: cloudnative-pg
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: dev-apps
   source:
     repoURL: https://github.com/StrimQ/iac.git
-    path: 02-helm-charts/04-dev-apps/authentik
+    path: 02-helm-charts/04-dev-apps/cloudnative-pg
     targetRevision: main
     directory:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: authentik
+    namespace: cloudnative-pg
   syncPolicy:
     automated:
       selfHeal: true
