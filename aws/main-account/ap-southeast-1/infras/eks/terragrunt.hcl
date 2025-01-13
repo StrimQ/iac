@@ -8,7 +8,7 @@ include "root" {
 }
 
 dependency "vpc" {
-  config_path = "${get_terragrunt_dir()}/../01-vpc"
+  config_path = "${get_terragrunt_dir()}/../vpc"
 }
 
 ###########################################################
