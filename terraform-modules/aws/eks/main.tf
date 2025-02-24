@@ -1,4 +1,5 @@
 data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
 
 locals {
   name = var.name
@@ -6,6 +7,27 @@ locals {
   tags = merge(var.tags, {
     GithubRepo = "github.com/StrimQ/iac"
   })
+}
+
+#---------------------------------------------------------------
+# KMS for sops EKS resources
+#---------------------------------------------------------------
+module "sops-kms" {
+  source  = "terraform-aws-modules/kms/aws"
+  version = "3.1.1"
+
+  description             = "KMS key for sops EKS resources"
+  key_usage               = "ENCRYPT_DECRYPT"
+  deletion_window_in_days = 7
+
+  # Policy
+  key_administrators = [data.aws_caller_identity.current.arn]
+  key_users          = [data.aws_caller_identity.current.arn]
+
+  # Aliases
+  aliases = ["${local.name}/eks/sops"]
+
+  tags = local.tags
 }
 
 #---------------------------------------------------------------
@@ -24,15 +46,15 @@ module "eks" {
   cluster_endpoint_public_access           = true
 
   cluster_addons = {
-    aws-ebs-csi-driver = { most_recent = true }
+    aws-ebs-csi-driver     = { most_recent = true }
     coredns                = { most_recent = true }
     eks-pod-identity-agent = { most_recent = true }
     kube-proxy             = { most_recent = true }
     vpc-cni                = { most_recent = true }
   }
 
-  vpc_id                   = var.vpc_id
-  subnet_ids               = var.subnet_ids
+  vpc_id     = var.vpc_id
+  subnet_ids = var.subnet_ids
 
   eks_managed_node_groups = {
     karpenter = {
@@ -57,7 +79,7 @@ module "eks" {
       to_port                       = 8080
       protocol                      = "tcp"
       source_cluster_security_group = true
-      description            = "Allow Sealed Secrets to receive traffic from the control plane"
+      description                   = "Allow Sealed Secrets to receive traffic from the control plane"
     }
   }
   node_security_group_tags = merge(local.tags, {
@@ -74,7 +96,7 @@ module "eks" {
 # Karpenter
 #---------------------------------------------------------------
 module "karpenter" {
-  source = "terraform-aws-modules/eks/aws//modules/karpenter"
+  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
   version = "20.31.6"
 
   cluster_name          = module.eks.cluster_name

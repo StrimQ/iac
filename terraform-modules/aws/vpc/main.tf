@@ -44,7 +44,7 @@ module "vpc" {
   # NOTE: standard-private
   # private_subnets     = concat(local.private_subnets, local.secondary_ip_range_private_subnets)
   map_public_ip_on_launch = true
-  public_subnets     = concat(local.public_subnets, local.secondary_ip_range_public_subnets)
+  public_subnets          = concat(local.public_subnets, local.secondary_ip_range_public_subnets)
 
   enable_nat_gateway = var.enable_nat_gateway
   single_nat_gateway = true

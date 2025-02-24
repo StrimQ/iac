@@ -9,7 +9,7 @@ variable "subnet_ids" {
 }
 
 variable "name" {
-  description = "Name of the VPC and EKS Cluster"
+  description = "Name of the EKS Cluster"
   type        = string
   default     = "strimq"
 }
