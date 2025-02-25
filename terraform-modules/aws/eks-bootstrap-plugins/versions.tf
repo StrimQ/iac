@@ -14,5 +14,9 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.17.0"
     }
+    sops = {
+      source  = "carlpett/sops"
+      version = ">= 1.1.1"
+    }
   }
 }

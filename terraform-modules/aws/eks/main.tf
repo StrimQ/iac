@@ -25,7 +25,7 @@ module "sops-kms" {
   key_users          = [data.aws_caller_identity.current.arn]
 
   # Aliases
-  aliases = ["${local.name}/eks/sops"]
+  aliases = ["eks/${local.name}/sops"]
 
   tags = local.tags
 }

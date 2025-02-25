@@ -11,11 +11,11 @@ include "root" {
 # Input variables for this module
 ###########################################################
 inputs = {
-  name = "strimq"
-  vpc_cidr = "10.1.0.0/21"
+  name                  = "strimq"
+  vpc_cidr              = "10.1.0.0/21"
   secondary_cidr_blocks = ["100.64.0.0/16"]
   # NOTE: standard-private
   # enable_nat_gateway = true
-  enable_nat_gateway = false
+  enable_nat_gateway   = false
   enable_vpc_endpoints = false
 }

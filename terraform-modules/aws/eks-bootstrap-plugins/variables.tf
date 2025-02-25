@@ -24,3 +24,18 @@ variable "eks_cluster_certificate_authority_data" {
   description = "EKS Cluster certificate authority data"
   type        = string
 }
+
+variable "sealed_secrets_values_file" {
+  description = "Path to the sealed-secrets.values.yaml file"
+  type        = string
+}
+
+variable "sealed_secrets_tls_sops_file" {
+  description = "Path to the sealed-secrets-tls.secrets.enc.yaml file"
+  type        = string
+}
+
+variable "argocd_values_file" {
+  description = "Path to the argocd.values.yaml file"
+  type        = string
+}

@@ -17,6 +17,10 @@ data "aws_eks_cluster_auth" "this" {
   name = var.eks_cluster_name
 }
 
+data "sops_file" "sealed_secrets_tls" {
+  source_file = var.sealed_secrets_tls_sops_file
+}
+
 locals {
   name = var.name
 
@@ -28,6 +32,20 @@ locals {
 #---------------------------------------------------------------
 # Helm Releases
 #---------------------------------------------------------------
+resource "kubernetes_secret" "sealed_secrets_tls" {
+  metadata {
+    name      = "sealed-secrets-tls"
+    namespace = "kube-system"
+  }
+
+  type = "kubernetes.io/tls"
+
+  data = {
+    "tls.crt" = data.sops_file.sealed_secrets_tls.data["tls.crt"]
+    "tls.key" = data.sops_file.sealed_secrets_tls.data["tls.key"]
+  }
+}
+
 resource "helm_release" "sealed-secrets" {
   name      = "sealed-secrets"
   namespace = "kube-system"
@@ -39,7 +57,9 @@ resource "helm_release" "sealed-secrets" {
   timeout = 600
 
   values = [
-    templatefile(var.sealed_secrets_values_file, {})
+    templatefile(var.sealed_secrets_values_file, {
+      sealed_secrets_tls = kubernetes_secret.sealed_secrets_tls.metadata[0].name
+    })
   ]
 }
 
