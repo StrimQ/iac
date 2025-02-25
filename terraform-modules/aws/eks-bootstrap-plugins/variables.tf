@@ -34,8 +34,3 @@ variable "sealed_secrets_tls_sops_file" {
   description = "Path to the sealed-secrets-tls.secrets.enc.yaml file"
   type        = string
 }
-
-variable "argocd_values_file" {
-  description = "Path to the argocd.values.yaml file"
-  type        = string
-}

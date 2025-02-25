@@ -34,7 +34,7 @@ locals {
 #---------------------------------------------------------------
 resource "kubernetes_secret" "sealed_secrets_tls" {
   metadata {
-    name      = "sealed-secrets-tls"
+    name      = "sealed-secrets-key"
     namespace = "kube-system"
   }
 
@@ -58,24 +58,7 @@ resource "helm_release" "sealed-secrets" {
 
   values = [
     templatefile(var.sealed_secrets_values_file, {
-      sealed_secrets_tls = kubernetes_secret.sealed_secrets_tls.metadata[0].name
+      secretName = kubernetes_secret.sealed_secrets_tls.metadata[0].name
     })
-  ]
-}
-
-
-resource "helm_release" "argocd" {
-  name             = "argocd"
-  namespace        = "argocd"
-  create_namespace = true
-
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argo-cd"
-  version    = "7.7.11"
-
-  timeout = 600
-
-  values = [
-    templatefile(var.argocd_values_file, {})
   ]
 }

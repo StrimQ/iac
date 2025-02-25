@@ -1,2 +1,3 @@
 enabled: true
 fullnameOverride: sealed-secrets-controller
+keyrenewperiod: "0" # Disable key rotation

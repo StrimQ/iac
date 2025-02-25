@@ -1,8 +1,8 @@
 .PHONY: sealed-secrets-gen-cert
 SEALED_SECRET_KEY_FILE := ./assets/sealed-secrets.key
 SEALED_SECRET_CERT_FILE := ./assets/sealed-secrets.crt
-SEALED_SECRET_TLS_FILE := ./assets/sealed-secrets-tls.secrets.yaml
-SEALED_SECRET_SOPS_TLS_FILE := ./assets/sealed-secrets-tls.secrets.enc.yaml
+SEALED_SECRET_TLS_FILE := ./assets/sealed-secrets-key.secrets.yaml
+SEALED_SECRET_SOPS_TLS_FILE := ./assets/sealed-secrets-key.secrets.enc.yaml
 KMS_KEY := arn:aws:kms:ap-southeast-1:429702212725:alias/eks/strimq/sops
 sealed-secrets-gen-cert: ## Generate self-signed certificate for Sealed Secrets
 	@echo "Generating self-signed certificate for Sealed Secrets..."
