@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-bootstrap
+  name: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
     repoURL: https://github.com/StrimQ/iac.git
-    path: helm-charts/argocd-bootstrap/
+    path: helm-charts/argocd/
     targetRevision: main
     helm:
       valueFiles:
-        - ../../aws/main-account/ap-southeast-1/charts/argocd-bootstrap/values.yaml
+        - ../../aws/main-account/ap-southeast-1/charts/argocd/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
