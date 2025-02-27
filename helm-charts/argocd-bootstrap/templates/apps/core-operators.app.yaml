@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: strimzi
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: core-apps
+  source:
+    chart: strimzi-kafka-operator
+    repoURL: https://strimzi.io/charts
+    targetRevision: 0.45.0
+    helm:
+      releaseName: strimzi
+      valueFiles:
+        - ../../aws/main-account/ap-southeast-1/charts/strimzi/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: strimzi
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
