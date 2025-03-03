@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-bootstrap
+  name: controller-bootstrap
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
     - repoURL: https://github.com/StrimQ/iac.git
-      path: helm-charts/argocd-bootstrap/
+      path: helm-charts/controller-bootstrap/
       targetRevision: main
       helm:
         valueFiles:
-          - $values/{{ .Values.apps.valuesDirectoryPrefix }}/argocd-bootstrap/values.yaml
+          - $values/{{ .Values.apps.valuesDirectoryPrefix }}/controller-bootstrap/values.yaml
     - repoURL: https://github.com/StrimQ/iac.git
       targetRevision: main
       ref: values

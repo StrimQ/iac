@@ -5,7 +5,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: core-apps
+  project: default
   sources:
     - chart: strimzi-kafka-operator
       repoURL: https://strimzi.io/charts
