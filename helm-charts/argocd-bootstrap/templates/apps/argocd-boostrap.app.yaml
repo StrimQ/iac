@@ -6,13 +6,16 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://github.com/StrimQ/iac.git
-    path: helm-charts/argocd-bootstrap/
-    targetRevision: main
-    helm:
-      valueFiles:
-        - ../../aws/main-account/ap-southeast-1/charts/argocd-bootstrap/values.yaml
+  sources:
+    - repoURL: https://github.com/StrimQ/iac.git
+      path: helm-charts/argocd-bootstrap/
+      targetRevision: main
+      helm:
+        valueFiles:
+          - $values/{{ .Values.apps.valuesDirectoryPrefix }}/argocd-bootstrap/values.yaml
+    - repoURL: https://github.com/StrimQ/iac.git
+      targetRevision: main
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

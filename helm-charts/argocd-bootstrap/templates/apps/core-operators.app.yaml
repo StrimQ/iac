@@ -7,16 +7,16 @@ metadata:
 spec:
   project: core-apps
   sources:
-  - chart: strimzi-kafka-operator
-    repoURL: https://strimzi.io/charts
-    targetRevision: 0.45.0
-    helm:
-      releaseName: strimzi
-      valueFiles:
-        - $values/aws/main-account/ap-southeast-1/charts/strimzi/values.yaml
-  - repoURL: 'https://github.com/StrimQ/iac.git'
-    targetRevision: main
-    ref: values
+    - chart: strimzi-kafka-operator
+      repoURL: https://strimzi.io/charts
+      targetRevision: 0.45.0
+      helm:
+        releaseName: strimzi
+        valueFiles:
+          - $values/{{ .Values.apps.valuesDirectoryPrefix }}/strimzi/values.yaml
+    - repoURL: https://github.com/StrimQ/iac.git
+      targetRevision: main
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: strimzi
