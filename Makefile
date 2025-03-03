@@ -2,8 +2,8 @@
 SEALED_SECRET_KEY_FILE := ./assets/sealed-secrets.key
 SEALED_SECRET_CERT_FILE := ./assets/sealed-secrets.crt
 SEALED_SECRET_TLS_FILE := ./assets/sealed-secrets-key.secrets.yaml
-SEALED_SECRET_SOPS_TLS_FILE := ./assets/sealed-secrets-key.secrets.enc.yaml
-KMS_KEY := arn:aws:kms:ap-southeast-1:429702212725:alias/eks/strimq/sops
+SEALED_SECRET_SOPS_TLS_FILE := ./aws/main-account/ap-southeast-1/infras/eks-bootstrap-plugins/assets/sealed-secrets-key.secrets.enc.yaml
+KMS_KEY := arn:aws:kms:ap-southeast-1:429702212725:alias/strimq/sops
 sealed-secrets-gen-cert: ## Generate self-signed certificate for Sealed Secrets
 	@echo "Generating self-signed certificate for Sealed Secrets..."
 	@openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout $(SEALED_SECRET_KEY_FILE) -out $(SEALED_SECRET_CERT_FILE) -subj "/CN=sealed-secrets/O=sealed-secrets"
@@ -13,3 +13,10 @@ sealed-secrets-gen-cert: ## Generate self-signed certificate for Sealed Secrets
 sealed-secrets-encrypt-tls: ## Encrypt Sealed Secrets TLS certificate with SOPS
 	@echo "Encrypting Sealed Secrets TLS certificate with SOPS..."
 	@sops --encrypt --kms "$(KMS_KEY)" $(SEALED_SECRET_TLS_FILE) > $(SEALED_SECRET_SOPS_TLS_FILE)
+
+.PHONY: kubeseal-secret
+SECRET_FILE := ./assets/iac-repo.secret.yaml
+SEALED_SECRET_FILE := ./helm-charts/argocd/templates/sealedsecrets/iac-repo.sealedsecret.yaml
+kubeseal-secret:
+	@echo "Encrypting secret with kubeseal..."
+	@kubeseal -f $(SECRET_FILE) -w $(SEALED_SECRET_FILE)
