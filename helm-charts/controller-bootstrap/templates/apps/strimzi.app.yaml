@@ -2,21 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: strimzi
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - chart: strimzi-kafka-operator
-      repoURL: https://strimzi.io/charts
-      targetRevision: 0.45.0
-      helm:
-        releaseName: strimzi
-        valueFiles:
-          - $values/{{ .Values.apps.valuesDirectoryPrefix }}/strimzi/values.yaml
-    - repoURL: https://github.com/StrimQ/iac.git
-      targetRevision: main
-      ref: values
+  source:
+    chart: strimzi-kafka-operator
+    repoURL: https://strimzi.io/charts
+    targetRevision: 0.45.0
+    helm:
+      releaseName: strimzi
+      values: |
+{{ .Values.apps.strimzi.values | toYaml | indent 8 }}
   destination:
     server: https://kubernetes.default.svc
     namespace: strimzi

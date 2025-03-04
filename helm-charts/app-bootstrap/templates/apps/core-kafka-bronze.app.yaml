@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: core-apps
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/StrimQ/iac.git
+      path: helm-charts/core-apps/
+      targetRevision: main
+      helm:
+        valueFiles:
+          - $values/{{ .Values.apps.controllerBootstrap.valuesDirectoryPrefix }}/core-apps/values.yaml
+    - repoURL: https://github.com/StrimQ/iac.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true

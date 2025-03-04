@@ -2,20 +2,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - repoURL: https://github.com/StrimQ/iac.git
-      path: helm-charts/argocd/
-      targetRevision: main
-      helm:
-        valueFiles:
-          - $values/{{ .Values.apps.valuesDirectoryPrefix }}/argocd/values.yaml
-    - repoURL: https://github.com/StrimQ/iac.git
-      targetRevision: main
-      ref: values
+  source:
+    repoURL: https://github.com/StrimQ/iac.git
+    path: helm-charts/argocd/
+    targetRevision: main
+    helm:
+      values: |
+{{ .Values.apps.argocd.values  | toYaml | indent 8 }}
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

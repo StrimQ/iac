@@ -2,20 +2,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: controller-bootstrap
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - repoURL: https://github.com/StrimQ/iac.git
-      path: helm-charts/controller-bootstrap/
-      targetRevision: main
-      helm:
-        valueFiles:
-          - $values/{{ .Values.apps.valuesDirectoryPrefix }}/controller-bootstrap/values.yaml
-    - repoURL: https://github.com/StrimQ/iac.git
-      targetRevision: main
-      ref: values
+  source:
+    repoURL: https://github.com/StrimQ/iac.git
+    path: helm-charts/controller-bootstrap/
+    targetRevision: main
+    helm:
+      values: |
+{{ .Values  | toYaml | indent 8 }}
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
